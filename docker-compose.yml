@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+
+    environment:
+      - MONGO_URI = "mongodb://mongodb:27017/http_echo"
+
+    ports:
+      - 5000:5000
+
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:3.6
+    ports:
+      - 27017:27017
