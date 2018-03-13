@@ -6,19 +6,17 @@ name = "pypi"
 
 
 [packages]
-
-uwsgi = "*"
+gunicorn = "*"
+gevent = "*"
 flask = "*"
 flask-pymongo = "*"
 
 
 [dev-packages]
-
 pylint = "*"
 pytest = "*"
 yapf = "*"
 
 
 [requires]
-
 python_version = "3.6"
