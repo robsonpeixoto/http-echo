@@ -6,19 +6,9 @@ COPY Pipfile /app
 COPY Pipfile.lock /app
 
 RUN set -e \
-    && apk add --no-cache --update --virtual .build-deps \
-    gcc make musl-dev linux-headers \
+    && apk add --no-cache --update --virtual .build-deps gcc make musl-dev linux-headers \
     && pip install --no-cache-dir -q pipenv \
-    && pipenv install --system \
-    && runDeps="$( \
-            scanelf --needed --nobanner --recursive /usr \
-                    | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-                    | sort -u \
-                    | xargs -r apk info --installed \
-                    | sort -u \
-    )" \
-    && apk add --virtual .python-rundeps $runDeps \
-    && apk del .build-deps
+    && pipenv install --system
 
 COPY . /app
 
