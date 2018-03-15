@@ -13,7 +13,7 @@ mongo = PyMongo(app)
 
 @app.route('/', defaults={'path': ''}, methods=ALL_METHODS)
 @app.route('/<path:path>', methods=ALL_METHODS)
-def echo():
+def echo(path):
     data = dict(
         path=request.path,
         method=request.method,
@@ -29,7 +29,7 @@ def echo():
         json=request.json,
     )
 
-    mongo.db.requests.insert(data)
+    mongo.db.requests.insert(dict(data))
     return jsonify(data)
 
 
