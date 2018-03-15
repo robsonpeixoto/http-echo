@@ -14,12 +14,23 @@ mongo = PyMongo(app)
 @app.route('/', defaults={'path': ''}, methods=ALL_METHODS)
 @app.route('/<path:path>', methods=ALL_METHODS)
 def echo():
-    args = request.args or {}
-    body = request.get_json() or {}
+    data = dict(
+        path=request.path,
+        method=request.method,
+        headers=list(request.headers.items()),
+        form=list(request.form.items()),
+        args=list(request.args.items()),
+        remote=dict(
+            address=request.environ['REMOTE_ADDR'],
+            port=request.environ['REMOTE_PORT'],
+        ),
+        content_type=request.content_type,
+        files=[(f[0], f[1].filename) for f in request.files.items()],
+        json=request.json,
+    )
 
-    mongo.db.requests.insert({"args": args, "body": body})
-
-    return jsonify(dict(ok=True, args=args, body=body))
+    mongo.db.requests.insert(data)
+    return jsonify(data)
 
 
 if __name__ == "__main__":
